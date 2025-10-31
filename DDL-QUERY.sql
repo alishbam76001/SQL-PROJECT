@@ -19,7 +19,8 @@ CREATE TABLE branch (
     manager_id VARCHAR(50) NOT NULL,
     branch_address VARCHAR(50) NOT NULL,
     PHONE_NUMBER VARCHAR(50),
-    CONSTRAINT PK_branch_branch_id PRIMARY KEY (branch_id)
+    CONSTRAINT PK_branch_branch_id PRIMARY KEY (branch_id),
+
 );
 
 DROP TABLE IF EXISTS employees
@@ -29,7 +30,9 @@ CREATE TABLE employees (
     position VARCHAR(50) NOT NULL,
     salary FLOAT,
     branch_id VARCHAR(50),
-    CONSTRAINT PK_employees_emp_id PRIMARY KEY (emp_id)
+    CONSTRAINT PK_employees_emp_id PRIMARY KEY (emp_id),
+     CONSTRAINT FK_employees_branch_id FOREIGN KEY (branch_id)
+        REFERENCES branch(branch_id)
     
 );
 
@@ -42,7 +45,11 @@ CREATE TABLE issued_date (
     issued_date DATE NOT NULL,
     issued_book_isbn VARCHAR(50) NOT NULL,
     issued_emp_id VARCHAR(50) NOT NULL,
-    CONSTRAINT PK_issued_books_issued_id PRIMARY KEY (issued_id)
+    CONSTRAINT PK_issued_books_issued_id PRIMARY KEY (issued_id),
+     CONSTRAINT FK_issued_books_isbn FOREIGN KEY (issued_book_isbn)
+        REFERENCES books(isbn),
+    CONSTRAINT FK_issued_books_emp_id FOREIGN KEY (issued_emp_id)
+        REFERENCES employees(emp_id)
 );
 
 DROP TABLE IF EXISTS members
@@ -50,7 +57,8 @@ CREATE TABLE members (
     member_id VARCHAR(50) NOT NULL,
     member_name VARCHAR(100) NOT NULL,
     member_address VARCHAR(255) NOT NULL,
-    reg_date DATE NOT NULL
+    reg_date DATE NOT NULL,
+     CONSTRAINT PK_members_member_id PRIMARY KEY (member_id)
 );
 
 
@@ -60,6 +68,10 @@ CREATE TABLE return_date (
     issued_id VARCHAR(50) NOT NULL,
     return_book_name VARCHAR(150),
     return_date DATE NOT NULL,
-    return_book_isbn VARCHAR(50)
+    return_book_isbn VARCHAR(50),
+    CONSTRAINT FK_returned_books_issued_id FOREIGN KEY (issued_id)
+        REFERENCES issued_date(issued_id),
+    CONSTRAINT FK_returned_books_isbn FOREIGN KEY (return_book_isbn)
+        REFERENCES books(isbn)
        
 );
